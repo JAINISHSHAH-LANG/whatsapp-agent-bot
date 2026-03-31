@@ -156,11 +156,7 @@ async function initWhatsApp() {
       clientId: 'shah-007-agent',
       dataPath: wwebjsAuthPath
     }),
-    puppeteer: puppeteerOptions,
-    webVersionCache: {
-      type: 'remote',
-      remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html'
-    }
+    puppeteer: puppeteerOptions
   });
 
   whatsappClient.on('qr', async (qr) => {
