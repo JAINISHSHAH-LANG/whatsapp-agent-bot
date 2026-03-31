@@ -1523,7 +1523,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`\n🤖 WhatsApp Messaging Agent running at http://localhost:${PORT}`);
-  console.log('   Click "Connect WhatsApp" in the UI to start.\n');
-});
+if (!process.env.VERCEL) {
+  app.listen(process.env.PORT || PORT, () => {
+    console.log(`\n🤖 WhatsApp Messaging Agent running at http://localhost:${process.env.PORT || PORT}`);
+    console.log('   Click "Connect WhatsApp" in the UI to start.\n');
+  });
+}
+
+module.exports = app;
