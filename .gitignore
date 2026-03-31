@@ -9,3 +9,6 @@ scheduled_tasks.json
 dist
 .vercel
 package-lock.json
+
+.vercel
+.env*.local

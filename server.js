@@ -116,34 +116,45 @@ setInterval(async () => {
 }, 60000);
 
 // ============ Initialize WhatsApp Client ============
-function initializeWhatsApp() {
-  if (whatsappClient) {
-    try { whatsappClient.destroy(); } catch (e) {}
-  }
-
+async function initWhatsApp() {
+  if (whatsappClient) return;
+  
   clientReady = false;
   qrCodeData = null;
 
+  const puppeteerOptions = {
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-extensions',
+      '--no-first-run',
+      '--no-zygote',
+      '--single-process',
+      '--disable-gpu'
+    ]
+  };
+
+  // Vercel / Serverless path detection
+  if (process.env.VERCEL) {
+    try {
+      const chromium = require('@sparticuz/chromium');
+      puppeteerOptions.executablePath = await chromium.executablePath();
+    } catch (e) {
+      console.warn('⚠ Chromium for Vercel not found. Using default paths.');
+    }
+  }
+
   whatsappClient = new Client({
-    authStrategy: new LocalAuth({ dataPath: path.join(__dirname, '.wwebjs_auth') }),
+    authStrategy: new LocalAuth({
+      clientId: 'shah-007-agent',
+      dataPath: path.join(__dirname, '.wwebjs_auth')
+    }),
+    puppeteer: puppeteerOptions,
     webVersionCache: {
       type: 'remote',
       remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html'
-    },
-    puppeteer: {
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--disable-gpu',
-        '--disable-features=IsolateOrigins,site-per-process',
-        '--disable-site-isolation-trials',
-        '--disable-web-security'
-      ]
     }
   });
 
