@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Ensure uploads directory exists
-const uploadDir = path.join(__dirname, 'uploads');
+const uploadDir = process.env.VERCEL ? path.join('/tmp', 'uploads') : path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 // Multer config for file uploads
@@ -50,7 +50,7 @@ let messagingInProgress = false;
 let messagingStats = { total: 0, sent: 0, failed: 0, pending: 0 };
 
 let scheduledTasks = [];
-const tasksFile = path.join(__dirname, 'scheduled_tasks.json');
+const tasksFile = process.env.VERCEL ? path.join('/tmp', 'scheduled_tasks.json') : path.join(__dirname, 'scheduled_tasks.json');
 
 // Load tasks from file if exists
 if (fs.existsSync(tasksFile)) {
@@ -141,15 +141,20 @@ async function initWhatsApp() {
     try {
       const chromium = require('@sparticuz/chromium');
       puppeteerOptions.executablePath = await chromium.executablePath();
+      puppeteerOptions.args = chromium.args;
+      puppeteerOptions.headless = chromium.headless;
+      puppeteerOptions.defaultViewport = chromium.defaultViewport;
     } catch (e) {
       console.warn('⚠ Chromium for Vercel not found. Using default paths.');
     }
   }
 
+  const wwebjsAuthPath = process.env.VERCEL ? path.join('/tmp', '.wwebjs_auth') : path.join(__dirname, '.wwebjs_auth');
+
   whatsappClient = new Client({
     authStrategy: new LocalAuth({
       clientId: 'shah-007-agent',
-      dataPath: path.join(__dirname, '.wwebjs_auth')
+      dataPath: wwebjsAuthPath
     }),
     puppeteer: puppeteerOptions,
     webVersionCache: {
