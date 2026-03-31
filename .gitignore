@@ -1,0 +1,11 @@
+node_modules
+.env
+uploads
+.wwebjs_auth
+.wwebjs_cache
+*.log
+scheduled_tasks.json
+.DS_Store
+dist
+.vercel
+package-lock.json

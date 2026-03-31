@@ -1,0 +1,27 @@
+{
+  "name": "whatsapp-agent",
+  "version": "1.0.0",
+  "description": "A WhatsApp messaging AI agent",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "whatsapp",
+    "automation",
+    "ai"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "dotenv": "^17.3.1",
+    "express": "^4.18.2",
+    "mammoth": "^1.6.0",
+    "multer": "^1.4.5-lts.1",
+    "pdf-parse": "^1.1.1",
+    "qrcode": "^1.5.3",
+    "whatsapp-web.js": "^1.34.6"
+  }
+}
